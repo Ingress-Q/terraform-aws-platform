@@ -4,6 +4,9 @@
 *.tfstate.*
 crash.log
 *.hcl
+.terraform.lock.hcl
+backend.tf
+
 
 # Variables
 *.tfvars
