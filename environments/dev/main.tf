@@ -24,7 +24,7 @@ provider "aws" {
 module "networking" {
   source = "../../modules/networking"
 
-  
+
 
   tags = {
     Environment = "dev"

@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-      Name = "${var.name}-vpc"
+    Name = "${var.name}-vpc"
   }
 }
 
@@ -83,7 +83,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.main.id
   }
 
-   tags = merge(
+  tags = merge(
     var.tags,
     {
       Name = "${var.name}-public-rt"
@@ -107,7 +107,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.main[count.index].id
   }
 
-    tags = merge(
+  tags = merge(
     var.tags,
     {
       Name = "${var.name}-db-subnet-rt-${count.index + 1}"
@@ -126,7 +126,7 @@ resource "aws_route_table_association" "private" {
 resource "aws_network_acl" "main" {
   vpc_id = aws_vpc.main.id
 
-   tags = merge(
+  tags = merge(
     var.tags,
     {
       Name = "${var.name}-nacl"
@@ -136,12 +136,12 @@ resource "aws_network_acl" "main" {
 
 # prvivate db subnets
 resource "aws_subnet" "private_db" {
-    count             = length(var.private_subnets)
-    vpc_id            = aws_vpc.main.id
-    cidr_block        = var.private_subnets[count.index]
-    availability_zone = var.availability_zones[count.index]
-    
-      tags = merge(
+  count             = length(var.private_subnets)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnets[count.index]
+  availability_zone = var.availability_zones[count.index]
+
+  tags = merge(
     var.tags,
     {
       Name = "${var.name}-private-db-subnet-${count.index + 1}"
@@ -154,7 +154,7 @@ resource "aws_subnet" "private_db" {
 resource "aws_route_table" "private_db" {
   count  = length(var.availability_zones)
   vpc_id = aws_vpc.main.id
-    tags = merge(
+  tags = merge(
     var.tags,
     {
       Name = "${var.name}-db-subnet-rt-${count.index + 1}"

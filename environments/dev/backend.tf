@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "ingressq-terraform-state-bucket"
-    key            = "dev/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    use_lockfile = true  
+    bucket       = "ingressq-terraform-state-bucket"
+    key          = "dev/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true
   }
 }
