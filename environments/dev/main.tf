@@ -32,3 +32,20 @@ module "networking" {
   }
 }
 
+# EKS Module
+module "eks" {
+  source = "../../modules/eks"
+
+  project            = var.project_name
+  environment        = var.environment
+  region             = var.aws_region
+
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+  public_subnet_ids  = module.vpc.public_subnet_ids
+
+  tags = {
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+  }
+}
