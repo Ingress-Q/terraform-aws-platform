@@ -6,18 +6,13 @@ resource "helm_release" "karpenter" {
   chart      = "karpenter"
   namespace  = "karpenter"
 
-  set {
-    name  = "settings.clusterName"
-    value = var.cluster_name
-  }
-
-  set {
-    name  = "settings.clusterEndpoint"
-    value = var.cluster_endpoint
-  }
-
-  set {
-    name  = "settings.interruptionQueue"
-    value = var.interruption_queue
-  }
+  values = [
+    <<EOF
+settings:
+  clusterName: "${var.cluster_name}"
+  clusterEndpoint: "${var.cluster_endpoint}"
+  interruptionQueue: "${var.interruption_queue}"
+EOF
+  ]
 }
+
