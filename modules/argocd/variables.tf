@@ -1,4 +1,5 @@
-variable "grafana_admin_password" {
+
+variable "github_pat" {
   type      = string
   sensitive = true
 }

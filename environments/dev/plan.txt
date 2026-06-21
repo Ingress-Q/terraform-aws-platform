@@ -69,6 +69,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m storage_type                          = (known after apply)
       [32m+[0m[0m tags                                  = {
           [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
           [32m+[0m[0m "Service"     = "catalog-service"
         }
       [32m+[0m[0m tags_all                              = {
@@ -93,6 +94,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m supported_network_types = (known after apply)
       [32m+[0m[0m tags                    = {
           [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
           [32m+[0m[0m "Name"        = "catalog-mysql-dev-subnet-group"
           [32m+[0m[0m "Service"     = "catalog-service"
         }
@@ -145,6 +147,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m revoke_rules_on_delete = false
       [32m+[0m[0m tags                   = {
           [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
           [32m+[0m[0m "Service"     = "catalog-service"
         }
       [32m+[0m[0m tags_all               = {
@@ -238,9 +241,11 @@ Terraform will perform the following actions:
 
       [32m+[0m[0m vpc_config {
           [32m+[0m[0m cluster_security_group_id = (known after apply)
-          [32m+[0m[0m endpoint_private_access   = false
+          [32m+[0m[0m endpoint_private_access   = true
           [32m+[0m[0m endpoint_public_access    = true
-          [32m+[0m[0m public_access_cidrs       = (known after apply)
+          [32m+[0m[0m public_access_cidrs       = [
+              [32m+[0m[0m "0.0.0.0/0",
+            ]
           [32m+[0m[0m subnet_ids                = (known after apply)
           [32m+[0m[0m vpc_id                    = (known after apply)
         }
@@ -455,6 +460,469 @@ Terraform will perform the following actions:
       [32m+[0m[0m role       = "terraform-aws-platform-dev-nodegroup-role"
     }
 
+[1m  # module.karpenter.aws_eks_pod_identity_association.karpenter[0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_pod_identity_association" "karpenter" {
+      [32m+[0m[0m association_arn = (known after apply)
+      [32m+[0m[0m association_id  = (known after apply)
+      [32m+[0m[0m cluster_name    = "terraform-aws-platform-dev"
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m namespace       = "karpenter"
+      [32m+[0m[0m role_arn        = (known after apply)
+      [32m+[0m[0m service_account = "karpenter"
+      [32m+[0m[0m tags_all        = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+    }
+
+[1m  # module.karpenter.aws_iam_instance_profile.karpenter_node[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_instance_profile" "karpenter_node" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m create_date = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "terraform-aws-platform-dev-karpenter-node-profile"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m role        = "terraform-aws-platform-dev-karpenter-node"
+      [32m+[0m[0m tags        = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+        }
+      [32m+[0m[0m tags_all    = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+      [32m+[0m[0m unique_id   = (known after apply)
+    }
+
+[1m  # module.karpenter.aws_iam_policy.karpenter_controller[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "karpenter_controller" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Permissions Karpenter needs to launch, describe, and terminate EC2 nodes"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "terraform-aws-platform-dev-karpenter-controller-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = (known after apply)
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+    }
+
+[1m  # module.karpenter.aws_iam_role.karpenter_controller_role[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "karpenter_controller_role" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "sts:AssumeRole",
+                          [32m+[0m[0m "sts:TagSession",
+                        ]
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "terraform-aws-platform-dev-karpenter-controller-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-karpenter-controller-role"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-karpenter-controller-role"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.karpenter.aws_iam_role.karpenter_node[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "karpenter_node" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "terraform-aws-platform-dev-karpenter-node"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.karpenter.aws_iam_role_policy.karpenter_interruption_queue[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy" "karpenter_interruption_queue" {
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "terraform-aws-platform-dev-karpenter-interruption-queue"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m policy      = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "sqs:DeleteMessage",
+                          [32m+[0m[0m "sqs:GetQueueUrl",
+                          [32m+[0m[0m "sqs:ReceiveMessage",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "arn:aws:sqs:*:*:terraform-aws-platform-dev-karpenter-interrupt"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m role        = (known after apply)
+    }
+
+[1m  # module.karpenter.aws_iam_role_policy_attachment.cni[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "cni" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      [32m+[0m[0m role       = "terraform-aws-platform-dev-karpenter-node"
+    }
+
+[1m  # module.karpenter.aws_iam_role_policy_attachment.ecr[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ecr" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      [32m+[0m[0m role       = "terraform-aws-platform-dev-karpenter-node"
+    }
+
+[1m  # module.karpenter.aws_iam_role_policy_attachment.karpenter_controller_attachment[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "karpenter_controller_attachment" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "terraform-aws-platform-dev-karpenter-controller-role"
+    }
+
+[1m  # module.karpenter.aws_iam_role_policy_attachment.worker_node[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "worker_node" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      [32m+[0m[0m role       = "terraform-aws-platform-dev-karpenter-node"
+    }
+
+[1m  # module.karpenter.helm_release.karpenter[0m will be created
+[0m  [32m+[0m[0m resource "helm_release" "karpenter" {
+      [32m+[0m[0m atomic                     = false
+      [32m+[0m[0m chart                      = "karpenter"
+      [32m+[0m[0m cleanup_on_fail            = false
+      [32m+[0m[0m create_namespace           = true
+      [32m+[0m[0m dependency_update          = false
+      [32m+[0m[0m disable_crd_hooks          = false
+      [32m+[0m[0m disable_openapi_validation = false
+      [32m+[0m[0m disable_webhooks           = false
+      [32m+[0m[0m force_update               = false
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m lint                       = false
+      [32m+[0m[0m manifest                   = (known after apply)
+      [32m+[0m[0m max_history                = 0
+      [32m+[0m[0m metadata                   = (known after apply)
+      [32m+[0m[0m name                       = "karpenter"
+      [32m+[0m[0m namespace                  = "karpenter"
+      [32m+[0m[0m pass_credentials           = false
+      [32m+[0m[0m recreate_pods              = false
+      [32m+[0m[0m render_subchart_notes      = true
+      [32m+[0m[0m replace                    = false
+      [32m+[0m[0m repository                 = "oci://public.ecr.aws/karpenter"
+      [32m+[0m[0m reset_values               = false
+      [32m+[0m[0m reuse_values               = false
+      [32m+[0m[0m skip_crds                  = false
+      [32m+[0m[0m status                     = "deployed"
+      [32m+[0m[0m timeout                    = 300
+      [32m+[0m[0m values                     = (known after apply)
+      [32m+[0m[0m verify                     = false
+      [32m+[0m[0m version                    = "1.1.1"
+      [32m+[0m[0m wait                       = true
+      [32m+[0m[0m wait_for_jobs              = false
+    }
+
+[1m  # module.karpenter.kubectl_manifest.karpenter_ec2nodeclass[0m will be created
+[0m  [32m+[0m[0m resource "kubectl_manifest" "karpenter_ec2nodeclass" {
+      [32m+[0m[0m api_version             = (known after apply)
+      [32m+[0m[0m apply_only              = false
+      [32m+[0m[0m force_conflicts         = false
+      [32m+[0m[0m force_new               = false
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m kind                    = (known after apply)
+      [32m+[0m[0m live_manifest_incluster = (sensitive value)
+      [32m+[0m[0m live_uid                = (known after apply)
+      [32m+[0m[0m name                    = (known after apply)
+      [32m+[0m[0m namespace               = (known after apply)
+      [32m+[0m[0m server_side_apply       = false
+      [32m+[0m[0m uid                     = (known after apply)
+      [32m+[0m[0m validate_schema         = true
+      [32m+[0m[0m wait_for_rollout        = true
+      [32m+[0m[0m yaml_body               = (sensitive value)
+      [32m+[0m[0m yaml_body_parsed        = (known after apply)
+      [32m+[0m[0m yaml_incluster          = (sensitive value)
+    }
+
+[1m  # module.karpenter.kubectl_manifest.karpenter_nodepool[0m will be created
+[0m  [32m+[0m[0m resource "kubectl_manifest" "karpenter_nodepool" {
+      [32m+[0m[0m api_version             = "karpenter.sh/v1"
+      [32m+[0m[0m apply_only              = false
+      [32m+[0m[0m force_conflicts         = false
+      [32m+[0m[0m force_new               = false
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m kind                    = "NodePool"
+      [32m+[0m[0m live_manifest_incluster = (sensitive value)
+      [32m+[0m[0m live_uid                = (known after apply)
+      [32m+[0m[0m name                    = "default"
+      [32m+[0m[0m namespace               = (known after apply)
+      [32m+[0m[0m server_side_apply       = false
+      [32m+[0m[0m uid                     = (known after apply)
+      [32m+[0m[0m validate_schema         = true
+      [32m+[0m[0m wait_for_rollout        = true
+      [32m+[0m[0m yaml_body               = (sensitive value)
+      [32m+[0m[0m yaml_body_parsed        = <<-EOT
+            apiVersion: karpenter.sh/v1
+            kind: NodePool
+            metadata:
+              name: default
+            spec:
+              disruption:
+                consolidateAfter: 1m
+                consolidationPolicy: WhenEmptyOrUnderutilized
+              limits:
+                cpu: "16"
+              template:
+                spec:
+                  nodeClassRef:
+                    group: karpenter.k8s.aws
+                    kind: EC2NodeClass
+                    name: default
+                  requirements:
+                  - key: karpenter.sh/capacity-type
+                    operator: In
+                    values:
+                    - spot
+                    - on-demand
+                  - key: karpenter.k8s.aws/instance-category
+                    operator: In
+                    values:
+                    - c
+                    - m
+                    - r
+                  - key: karpenter.k8s.aws/instance-generation
+                    operator: Gt
+                    values:
+                    - "2"
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                    - amd64
+        EOT
+      [32m+[0m[0m yaml_incluster          = (sensitive value)
+    }
+
+[1m  # module.karpenter_sqs.aws_cloudwatch_event_rule.instance_state_change[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_rule" "instance_state_change" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m description    = "Karpenter: EC2 instance state change (stopping/terminating)"
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m event_pattern  = jsonencode(
+            {
+              [32m+[0m[0m detail-type = [
+                  [32m+[0m[0m "EC2 Instance State-change Notification",
+                ]
+              [32m+[0m[0m source      = [
+                  [32m+[0m[0m "aws.ec2",
+                ]
+            }
+        )
+      [32m+[0m[0m force_destroy  = false
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m name           = "terraform-aws-platform-dev-karpenter-interrupt-state-change"
+      [32m+[0m[0m name_prefix    = (known after apply)
+      [32m+[0m[0m tags           = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+        }
+      [32m+[0m[0m tags_all       = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+    }
+
+[1m  # module.karpenter_sqs.aws_cloudwatch_event_rule.rebalance[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_rule" "rebalance" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m description    = "Karpenter: EC2 instance rebalance recommendations"
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m event_pattern  = jsonencode(
+            {
+              [32m+[0m[0m detail-type = [
+                  [32m+[0m[0m "EC2 Instance Rebalance Recommendation",
+                ]
+              [32m+[0m[0m source      = [
+                  [32m+[0m[0m "aws.ec2",
+                ]
+            }
+        )
+      [32m+[0m[0m force_destroy  = false
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m name           = "terraform-aws-platform-dev-karpenter-interrupt-rebalance"
+      [32m+[0m[0m name_prefix    = (known after apply)
+      [32m+[0m[0m tags           = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+        }
+      [32m+[0m[0m tags_all       = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+    }
+
+[1m  # module.karpenter_sqs.aws_cloudwatch_event_rule.spot_interruption[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_rule" "spot_interruption" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m description    = "Karpenter: EC2 Spot interruption warnings"
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m event_pattern  = jsonencode(
+            {
+              [32m+[0m[0m detail-type = [
+                  [32m+[0m[0m "EC2 Spot Instance Interruption Warning",
+                ]
+              [32m+[0m[0m source      = [
+                  [32m+[0m[0m "aws.ec2",
+                ]
+            }
+        )
+      [32m+[0m[0m force_destroy  = false
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m name           = "terraform-aws-platform-dev-karpenter-interrupt-spot-interruption"
+      [32m+[0m[0m name_prefix    = (known after apply)
+      [32m+[0m[0m tags           = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+        }
+      [32m+[0m[0m tags_all       = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+    }
+
+[1m  # module.karpenter_sqs.aws_cloudwatch_event_target.instance_state_change[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_target" "instance_state_change" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m force_destroy  = false
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m rule           = "terraform-aws-platform-dev-karpenter-interrupt-state-change"
+      [32m+[0m[0m target_id      = "karpenter-interruption-queue"
+    }
+
+[1m  # module.karpenter_sqs.aws_cloudwatch_event_target.rebalance[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_target" "rebalance" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m force_destroy  = false
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m rule           = "terraform-aws-platform-dev-karpenter-interrupt-rebalance"
+      [32m+[0m[0m target_id      = "karpenter-interruption-queue"
+    }
+
+[1m  # module.karpenter_sqs.aws_cloudwatch_event_target.spot_interruption[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_target" "spot_interruption" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m force_destroy  = false
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m rule           = "terraform-aws-platform-dev-karpenter-interrupt-spot-interruption"
+      [32m+[0m[0m target_id      = "karpenter-interruption-queue"
+    }
+
+[1m  # module.karpenter_sqs.aws_sqs_queue.karpenter_interruption[0m will be created
+[0m  [32m+[0m[0m resource "aws_sqs_queue" "karpenter_interruption" {
+      [32m+[0m[0m arn                               = (known after apply)
+      [32m+[0m[0m content_based_deduplication       = false
+      [32m+[0m[0m deduplication_scope               = (known after apply)
+      [32m+[0m[0m delay_seconds                     = 0
+      [32m+[0m[0m fifo_queue                        = false
+      [32m+[0m[0m fifo_throughput_limit             = (known after apply)
+      [32m+[0m[0m id                                = (known after apply)
+      [32m+[0m[0m kms_data_key_reuse_period_seconds = 0
+      [32m+[0m[0m max_message_size                  = 262144
+      [32m+[0m[0m message_retention_seconds         = 300
+      [32m+[0m[0m name                              = "terraform-aws-platform-dev-karpenter-interrupt"
+      [32m+[0m[0m name_prefix                       = (known after apply)
+      [32m+[0m[0m policy                            = (known after apply)
+      [32m+[0m[0m receive_wait_time_seconds         = 0
+      [32m+[0m[0m redrive_allow_policy              = (known after apply)
+      [32m+[0m[0m redrive_policy                    = (known after apply)
+      [32m+[0m[0m sqs_managed_sse_enabled           = true
+      [32m+[0m[0m tags                              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+        }
+      [32m+[0m[0m tags_all                          = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Project"     = "terraform-aws-platform"
+        }
+      [32m+[0m[0m url                               = (known after apply)
+      [32m+[0m[0m visibility_timeout_seconds        = 30
+    }
+
+[1m  # module.karpenter_sqs.aws_sqs_queue_policy.karpenter_interruption[0m will be created
+[0m  [32m+[0m[0m resource "aws_sqs_queue_policy" "karpenter_interruption" {
+      [32m+[0m[0m id        = (known after apply)
+      [32m+[0m[0m policy    = (known after apply)
+      [32m+[0m[0m queue_url = (known after apply)
+    }
+
 [1m  # module.networking.aws_eip.nat[0][0m will be created
 [0m  [32m+[0m[0m resource "aws_eip" "nat" {
       [32m+[0m[0m allocation_id        = (known after apply)
@@ -477,12 +945,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags                 = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-eip-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-eip-1"
         }
       [32m+[0m[0m tags_all             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-eip-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-eip-1"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc                  = (known after apply)
@@ -520,12 +988,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags                               = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-nat-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-nat-1"
         }
       [32m+[0m[0m tags_all                           = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-nat-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-nat-1"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
     }
@@ -546,12 +1014,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-private-rt-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-private-rt-1"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-private-rt-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-private-rt-1"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -573,12 +1041,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-private-rt-2"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-private-rt-2"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-private-rt-2"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-private-rt-2"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -600,12 +1068,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-private-rt-3"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-private-rt-3"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-private-rt-3"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-private-rt-3"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -621,12 +1089,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-subnet-rt-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-subnet-rt-1"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-subnet-rt-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-subnet-rt-1"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -642,12 +1110,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-subnet-rt-2"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-subnet-rt-2"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-subnet-rt-2"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-subnet-rt-2"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -663,12 +1131,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-subnet-rt-3"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-subnet-rt-3"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-db-subnet-rt-3"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-db-subnet-rt-3"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -690,12 +1158,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-public-rt"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-public-rt"
         }
       [32m+[0m[0m tags_all         = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-public-rt"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-public-rt"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id           = (known after apply)
@@ -873,12 +1341,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags                                           = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-private-db-subnet-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-private-db-subnet-1"
         }
       [32m+[0m[0m tags_all                                       = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-private-db-subnet-1"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-private-db-subnet-1"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id                                         = (known after apply)
@@ -903,12 +1371,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags                                           = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-private-db-subnet-2"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-private-db-subnet-2"
         }
       [32m+[0m[0m tags_all                                       = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-private-db-subnet-2"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-private-db-subnet-2"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id                                         = (known after apply)
@@ -933,12 +1401,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m tags                                           = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-private-db-subnet-3"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-private-db-subnet-3"
         }
       [32m+[0m[0m tags_all                                       = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-private-db-subnet-3"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-private-db-subnet-3"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
       [32m+[0m[0m vpc_id                                         = (known after apply)
@@ -1053,12 +1521,12 @@ Terraform will perform the following actions:
       [32m+[0m[0m main_route_table_id                  = (known after apply)
       [32m+[0m[0m owner_id                             = (known after apply)
       [32m+[0m[0m tags                                 = {
-          [32m+[0m[0m "Name" = "eks-vpc-vpc"
+          [32m+[0m[0m "Name" = "terraform-aws-platform-dev-vpc"
         }
       [32m+[0m[0m tags_all                             = {
           [32m+[0m[0m "Environment" = "dev"
           [32m+[0m[0m "ManagedBy"   = "Terraform"
-          [32m+[0m[0m "Name"        = "eks-vpc-vpc"
+          [32m+[0m[0m "Name"        = "terraform-aws-platform-dev-vpc"
           [32m+[0m[0m "Project"     = "terraform-aws-platform"
         }
     }
@@ -1126,6 +1594,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m storage_type                          = (known after apply)
       [32m+[0m[0m tags                                  = {
           [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
           [32m+[0m[0m "Service"     = "orders-service"
         }
       [32m+[0m[0m tags_all                              = {
@@ -1150,6 +1619,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m supported_network_types = (known after apply)
       [32m+[0m[0m tags                    = {
           [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
           [32m+[0m[0m "Name"        = "orders-postgres-dev-subnet-group"
           [32m+[0m[0m "Service"     = "orders-service"
         }
@@ -1202,6 +1672,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m revoke_rules_on_delete = false
       [32m+[0m[0m tags                   = {
           [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
           [32m+[0m[0m "Service"     = "orders-service"
         }
       [32m+[0m[0m tags_all               = {
@@ -1213,7 +1684,7 @@ Terraform will perform the following actions:
       [32m+[0m[0m vpc_id                 = (known after apply)
     }
 
-[1mPlan:[0m [0m47 to add, 0 to change, 0 to destroy.
+[1mPlan:[0m [0m68 to add, 0 to change, 0 to destroy.
 [90m
 ─────────────────────────────────────────────────────────────────────────────[0m
 

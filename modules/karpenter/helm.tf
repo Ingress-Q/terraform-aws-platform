@@ -1,10 +1,10 @@
 resource "helm_release" "karpenter" {
-  count = 0 # disabled for now
-
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
   namespace  = "karpenter"
+  create_namespace = true
+  version    = "1.1.1"
 
   values = [
     <<EOF
@@ -14,5 +14,8 @@ settings:
   interruptionQueue: "${var.interruption_queue}"
 EOF
   ]
-}
 
+  depends_on = [
+    aws_eks_pod_identity_association.karpenter
+  ]
+}

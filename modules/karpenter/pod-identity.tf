@@ -3,5 +3,5 @@ resource "aws_eks_pod_identity_association" "karpenter" {
   namespace       = "karpenter"
   service_account = "karpenter"
 
-  role_arn = aws_iam_role.karpenter_controller.arn
+  role_arn = aws_iam_role.karpenter_controller_role.arn
 }

@@ -5,12 +5,12 @@ resource "aws_eks_node_group" "main" {
 
   subnet_ids = var.private_subnet_ids
 
-  instance_types = ["t3.medium"]
+ instance_types = var.instance_types
 
-  scaling_config {
-    desired_size = 2
-    min_size     = 1
-    max_size     = 4
+ scaling_config {
+    desired_size = var.desired_size
+    min_size     = var.min_size
+    max_size     = var.max_size
   }
 
   capacity_type = "ON_DEMAND"

@@ -60,3 +60,21 @@ variable "tags" {
     ManagedBy   = "Terraform"
   }
 }
+variable "eks_api_access_cidrs" {
+  description = "CIDR blocks allowed to reach the EKS public API endpoint. Defaulted open (0.0.0.0/0) for solo practice convenience — IP changes between sessions. For an actual prod environment this should be locked to known CIDRs or fronted by a VPN."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "karpenter_node_cpu_limit" {
+  type    = string
+  default = "16"
+}
+variable "github_pat" {
+  type      = string
+  sensitive = true
+}
+variable "grafana_admin_password" {
+  type      = string
+  sensitive = true
+}

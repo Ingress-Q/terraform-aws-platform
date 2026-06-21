@@ -1,34 +1,54 @@
 variable "name" {
-  default = eks
-}
-variable "tags" {
-  default = { managed_by = "terraform" }
+  type    = string
+  default = "eks"
 }
 
 variable "project" {
-  default = eks-gitops
+  type    = string
+  default = "eks-gitops"
 }
+
 variable "environment" {
-  default = dev
+  type    = string
+  default = "dev"
 }
 
 variable "cluster_name" {
-  default = demo-eks-cluster
-}
-variable "cluster_name" {
-  description = "Kubernetes cluster name for karpenter settings"
-  type        = string
-  default     = ""
+  type = string
 }
 
 variable "cluster_endpoint" {
-  description = "Kubernetes cluster endpoint for karpenter settings"
-  type        = string
-  default     = ""
+  type = string
 }
 
 variable "interruption_queue" {
-  description = "Interruption queue for karpenter settings"
-  type        = string
-  default     = ""
+  type = string
+}
+
+variable "private_subnet_ids" {
+  type = list(string)
+}
+
+variable "cluster_security_group_id" {
+  type = string
+}
+
+variable "capacity_types" {
+  type    = list(string)
+  default = ["spot", "on-demand"]
+}
+
+variable "instance_categories" {
+  type    = list(string)
+  default = ["c", "m", "r"]
+}
+
+variable "node_cpu_limit" {
+  type    = string
+  default = "16"
+}
+
+variable "tags" {
+  type    = map(string)
+  default = { managed_by = "terraform" }
 }
