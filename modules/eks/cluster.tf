@@ -1,12 +1,53 @@
-# Future EKS Cluster
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "${local.cluster_name}-cluster-role"
 
-# Public endpoint enabled
-# Private endpoint disabled
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
 
-# Control plane logs:
-# - api
-# - audit
-# - authenticator
+    Statement = [
+      {
+        Effect = "Allow"
 
-# Kubernetes version:
-# Follow StackSimplify version
+        Principal = {
+          Service = "eks.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cluster_policy" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+resource "aws_eks_cluster" "this" {
+  name     = local.cluster_name
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  version = "1.34"
+
+  vpc_config {
+    subnet_ids = concat(
+      var.private_subnet_ids,
+      var.public_subnet_ids
+    )
+
+    endpoint_private_access = false
+    endpoint_public_access  = true
+  }
+
+  enabled_cluster_log_types = [
+    "api",
+    "audit",
+    "authenticator"
+  ]
+
+  depends_on = [
+    aws_iam_role_policy_attachment.cluster_policy
+  ]
+
+  tags = var.tags
+}

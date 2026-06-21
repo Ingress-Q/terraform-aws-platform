@@ -1,5 +1,5 @@
 resource "aws_iam_role" "karpenter_node_role" {
-  name               = "${var.name}-karpenter-node-role"
+  name = "${var.name}-karpenter-node-role"
   assume_role_policy = jsondecode({
     Version = "2012-10-17"
     Statement = [
@@ -22,16 +22,16 @@ resource "aws_iam_role" "karpenter_node_role" {
 
 
 #controller policy
-resource "aws_iam_policy" "karpenter_controller"{
-    name = "${var.name}-karpenter-controller-policy"
-    description = "Policy for Karpenter Controller"
-    policy = jsonencode({
-        Version = "2012-10-17",
-        Statement = [
-            {
-                Effect = "Allow",
-                Action = [
-                     "ec2:CreateFleet",
+resource "aws_iam_policy" "karpenter_controller" {
+  name        = "${var.name}-karpenter-controller-policy"
+  description = "Policy for Karpenter Controller"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:CreateFleet",
           "ec2:RunInstances",
           "ec2:CreateLaunchTemplate",
           "ec2:DescribeInstances",
@@ -44,11 +44,11 @@ resource "aws_iam_policy" "karpenter_controller"{
           "ssm:GetParameter",
           "iam:PassRole",
           "eks:DescribeCluster"
-                ],
-                Resource = "*"
-            }
-        ]
-    })      
+        ],
+        Resource = "*"
+      }
+    ]
+  })
 
 }
 

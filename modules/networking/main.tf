@@ -27,8 +27,10 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.tags["ManagedBy"]}-public-subnet-${count.index + 1}"
-  }
+  Name = "${var.tags["ManagedBy"]}-public-subnet-${count.index + 1}"
+
+  "kubernetes.io/role/elb" = "1"
+}
 }
 
 # Private Subnets
@@ -40,12 +42,14 @@ resource "aws_subnet" "private" {
 
   tags = {
     Name = "${var.tags["ManagedBy"]}-private-subnet-${count.index + 1}"
+
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }
 
 # Elastic IPs for NAT Gateway
 resource "aws_eip" "nat" {
-  count  = length(var.public_subnets)
+  count  = 1
   domain = "vpc"
 
   depends_on = [aws_internet_gateway.main]
@@ -60,7 +64,7 @@ resource "aws_eip" "nat" {
 
 # NAT Gateways
 resource "aws_nat_gateway" "main" {
-  count         = length(var.public_subnets)
+  count         = 1
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
 
@@ -104,13 +108,13 @@ resource "aws_route_table" "private" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main[count.index].id
+    nat_gateway_id = aws_nat_gateway.main[0].id
   }
 
   tags = merge(
     var.tags,
     {
-      Name = "${var.name}-db-subnet-rt-${count.index + 1}"
+      Name = "${var.name}-db-private-rt-${count.index + 1}"
     }
   )
 }
@@ -122,23 +126,13 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private[count.index].id
 }
 
-# Network ACLs (optional - for additional security)
-resource "aws_network_acl" "main" {
-  vpc_id = aws_vpc.main.id
 
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.name}-nacl"
-    }
-  )
-}
 
 # prvivate db subnets
 resource "aws_subnet" "private_db" {
-  count             = length(var.private_subnets)
+  count             = length(var.private_db_subnets)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnets[count.index]
+  cidr_block        = var.private_db_subnets[count.index]
   availability_zone = var.availability_zones[count.index]
 
   tags = merge(
@@ -164,7 +158,7 @@ resource "aws_route_table" "private_db" {
 
 resource "aws_route_table_association" "private_db" {
   count          = length(var.availability_zones)
-  subnet_id      = aws_subnet.private[count.index].id
+  subnet_id      = aws_subnet.private_db[count.index].id
   route_table_id = aws_route_table.private_db[count.index].id
 }
 
